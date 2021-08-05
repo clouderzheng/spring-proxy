@@ -22,21 +22,32 @@ public class TestJdkProxy {
 
         Play play = new PlayImpl();
 
-        Play proxy = (Play) Proxy.newProxyInstance(play.getClass().getClassLoader(), play.getClass().getInterfaces(), new InvocationHandler() {
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//        Runnable runnable = () -> System.out.println("1");
+//        Play proxy = (Play) Proxy.newProxyInstance(play.getClass().getClassLoader(), play.getClass().getInterfaces(), new InvocationHandler() {
+//            @Override
+//            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//
+//
+//                //这里反射的是接口 获取自定义注解必须加在接口上
+//                Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+//                Arrays.stream(declaredAnnotations).forEach(annotation -> System.out.println(annotation.annotationType()));
+//                Object result = method.invoke(play, args);
+//                System.out.println(" please wait ");
+//                return result;
+//            }
+//        });
+//        proxy.stayHone();
 
 
-                //这里反射的是接口 获取自定义注解必须加在接口上
-                Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-                Arrays.stream(declaredAnnotations).forEach(annotation -> System.out.println(annotation.annotationType()));
-                Object result = method.invoke(play, args);
-                System.out.println(" please wait ");
-                return result;
-            }
+        Play playProxy = (Play) Proxy.newProxyInstance(play.getClass().getClassLoader(), play.getClass().getInterfaces(),(proxy, method, args) -> {
+            Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+            Arrays.stream(declaredAnnotations).forEach(annotation -> System.out.println(annotation.annotationType()));
+            Object result = method.invoke(play, args);
+            System.out.println(" please wait ");
+            return result;
         });
+        playProxy.stayHone();
 
 //        proxy.getOut();
-        proxy.stayHone();
     }
 }

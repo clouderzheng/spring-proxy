@@ -1,11 +1,16 @@
 package com.night.spring.proxy.test;
 
 import com.night.spring.proxy.annation.ProxyAnnontion;
+import com.night.spring.proxy.domain.Handler;
+import com.night.spring.proxy.domain.RejectHandler;
+import com.night.spring.proxy.domain.Student;
 import com.night.spring.proxy.service.Write;
 import org.junit.Test;
-import org.springframework.cglib.proxy.Enhancer;
-import org.springframework.cglib.proxy.MethodInterceptor;
-import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.asm.Type;
+import org.springframework.cglib.beans.BeanMap;
+import org.springframework.cglib.core.DebuggingClassWriter;
+import org.springframework.cglib.core.Signature;
+import org.springframework.cglib.proxy.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -67,5 +72,77 @@ public class TestCglibProxy {
                 System.out.println(an.annotationType());
             }
         }
+    }
+
+
+
+    @Test
+    public void testInterface(){
+
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(RejectHandler.class);
+        enhancer.setInterfaces(new Class[]{Handler.class});
+        enhancer.setCallback(new MethodInterceptor() {
+            @Override
+            public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+
+                System.out.println("intercept before");
+                Object invoke = method.invoke(o, objects);
+                System.out.println("intercept handler");
+//                System.out.println("intercept before");
+//                Object invoke = method.invoke(o, objects);
+//                System.out.println("intercept handler");
+                return invoke;
+            }
+        });
+
+        Object o = enhancer.create();
+//
+//        if(o instanceof  Handler){
+//            Handler handler = (Handler)o;
+//            handler.handler();
+//        }
+
+        if(o instanceof  RejectHandler){
+            RejectHandler rejectHandler = (RejectHandler)o;
+            rejectHandler.reject();
+        }
+
+    }
+
+
+    @Test
+    public void testBeanMap(){
+        Student student = new Student();
+        student.setAge(28);
+        student.setName("night");
+
+        BeanMap beanMap = BeanMap.create(student);
+        beanMap.forEach( (k,v) ->{
+
+            System.out.println(v);
+        });
+        System.out.println(BeanMap.create(student));
+    }
+
+
+    static {
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/Users/fenlai/Desktop/work/github/spring-proxy/src/test/java");
+
+    }
+
+    @Test
+    public void testInterfaceMaker(){
+
+        Signature signature = new Signature("Action", Type.LONG_TYPE,new Type[]{Type.INT_TYPE,Type.DOUBLE_TYPE});
+        InterfaceMaker interfaceMaker = new InterfaceMaker();
+        interfaceMaker.add(signature,new Type[0]);
+        Class aClass = interfaceMaker.create();
+
+
+
+        System.out.println(aClass.getSimpleName());
+        System.out.println(aClass.getMethods()[0].getName());
+        Class<? extends InterfaceMaker> aClass1 = interfaceMaker.getClass();
     }
 }
