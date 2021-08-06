@@ -2,6 +2,7 @@ package com.night.spring.proxy.test;
 
 import com.night.spring.proxy.dao.Play;
 import com.night.spring.proxy.dao.impl.PlayImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
@@ -19,6 +20,8 @@ public class TestJdkProxy {
 
     @Test
     public void testJdkProxy(){
+        System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
+
 
         Play play = new PlayImpl();
 
@@ -50,4 +53,25 @@ public class TestJdkProxy {
 
 //        proxy.getOut();
     }
+
+
+    public static void main(String[] param) {
+        System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
+
+
+        Play play = new PlayImpl();
+
+
+
+        Play playProxy = (Play) Proxy.newProxyInstance(play.getClass().getClassLoader(), play.getClass().getInterfaces(),(proxy, method, args) -> {
+            Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+            Arrays.stream(declaredAnnotations).forEach(annotation -> System.out.println(annotation.annotationType()));
+            Object result = method.invoke(play, args);
+            System.out.println(" please wait ");
+            return result;
+        });
+        playProxy.stayHone();
+    }
+
+
 }

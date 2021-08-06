@@ -13,4 +13,10 @@ public interface Play {
 
 //    @ProxyAnnontion
     void stayHone();
+
+
+    void shop(String car);
+
+    void eat(String fish,String meat);
+
 }

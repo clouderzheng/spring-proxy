@@ -22,4 +22,18 @@ public class PlayImpl implements Play {
 
         System.out.println(" ok i stay hone");
     }
+
+
+
+    @Override
+    public void shop(String car){
+
+        System.out.println("购车");
+    }
+
+    @Override
+    public void eat(String fish, String meat){
+
+        System.out.println("美食一条街");
+    }
 }

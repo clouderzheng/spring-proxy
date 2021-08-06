@@ -51,6 +51,11 @@ public class TestCglibProxy {
                         System.out.println("我来拦截了");
                     }
                 });
+
+                if(declaredAnnotations.length == 0){
+                    System.out.println("空空如也");
+                }
+
                 Object result = method.invoke(write, args);
                 return result;
             }
@@ -58,6 +63,7 @@ public class TestCglibProxy {
         // 创建代理对象
         Write proxy = (Write) enhancer.create();
         proxy.write();
+        System.out.println(proxy);
 //        proxy.draw();
     }
 
