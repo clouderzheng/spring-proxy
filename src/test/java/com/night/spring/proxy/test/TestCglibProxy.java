@@ -1,6 +1,7 @@
 package com.night.spring.proxy.test;
 
 import com.night.spring.proxy.annation.ProxyAnnontion;
+import com.night.spring.proxy.dao.Play;
 import com.night.spring.proxy.domain.Handler;
 import com.night.spring.proxy.domain.RejectHandler;
 import com.night.spring.proxy.domain.Student;
@@ -68,6 +69,9 @@ public class TestCglibProxy {
     }
 
 
+
+
+
     @Test
     public void testGetAnnation(){
         Method[] methods = Write.class.getMethods();
@@ -87,32 +91,43 @@ public class TestCglibProxy {
 
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(RejectHandler.class);
-        enhancer.setInterfaces(new Class[]{Handler.class});
         enhancer.setCallback(new MethodInterceptor() {
             @Override
             public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
 
                 System.out.println("intercept before");
-                Object invoke = method.invoke(o, objects);
+                Object invoke = methodProxy.invokeSuper(o, objects);
                 System.out.println("intercept handler");
-//                System.out.println("intercept before");
-//                Object invoke = method.invoke(o, objects);
-//                System.out.println("intercept handler");
+
                 return invoke;
             }
         });
 
-        Object o = enhancer.create();
-//
-//        if(o instanceof  Handler){
-//            Handler handler = (Handler)o;
-//            handler.handler();
-//        }
+        RejectHandler play = (RejectHandler)enhancer.create();
+        play.reject();
 
-        if(o instanceof  RejectHandler){
-            RejectHandler rejectHandler = (RejectHandler)o;
-            rejectHandler.reject();
-        }
+    }
+
+
+    @Test
+    public void testInterfacePlay(){
+
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(Play.class);
+        enhancer.setCallback(new MethodInterceptor() {
+            @Override
+            public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+
+                System.out.println("intercept before");
+                Object invoke = methodProxy.invoke(o, objects);
+                System.out.println("intercept handler");
+
+                return invoke;
+            }
+        });
+
+        Play play = (Play)enhancer.create();
+        play.stayHone();
 
     }
 

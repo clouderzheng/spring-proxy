@@ -2,6 +2,7 @@ package com.night.spring.proxy.test;
 
 import com.night.spring.proxy.dao.Play;
 import com.night.spring.proxy.dao.impl.PlayImpl;
+import com.night.spring.proxy.dao.impl.PlayImpl2;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TestJdkProxy {
         System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 
 
-        Play play = new PlayImpl();
+        Play play = new PlayImpl2();
 
 //        Runnable runnable = () -> System.out.println("1");
 //        Play proxy = (Play) Proxy.newProxyInstance(play.getClass().getClassLoader(), play.getClass().getInterfaces(), new InvocationHandler() {
