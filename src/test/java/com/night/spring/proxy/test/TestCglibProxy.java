@@ -16,6 +16,7 @@ import org.springframework.cglib.proxy.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * @author night
@@ -165,5 +166,10 @@ public class TestCglibProxy {
         System.out.println(aClass.getSimpleName());
         System.out.println(aClass.getMethods()[0].getName());
         Class<? extends InterfaceMaker> aClass1 = interfaceMaker.getClass();
+    }
+
+
+    public static void main(String[] args) {
+        switch (Random)
     }
 }

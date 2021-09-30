@@ -75,4 +75,14 @@ public class TestJdkProxy {
     }
 
 
+
+    @Test
+    public void testMutilIntroduction(){
+        Play play = new PlayImpl();
+
+        Class<?> proxyClass = Proxy.getProxyClass(play.getClass().getClassLoader(), play.getClass().getInterfaces());
+//        proxyClass.se
+
+    }
+
 }
